@@ -47,8 +47,8 @@ class MultiStepper {
       volatile uint8_t *ddr,
       uint8_t mask
     );
-    void incrementStep(int *current_step);
-    void decrementStep(int *current_step);
+    void incrementStep(int motor);
+    void decrementStep(int motor);
     void printArray(char *label, int array[], int length);
 
     // for debugging currently

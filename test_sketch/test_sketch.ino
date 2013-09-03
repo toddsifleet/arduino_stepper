@@ -18,7 +18,7 @@ byte direction = 0b101010;
 void loop() {
     if (millis() - last_step >= 1) {
       step_count++;
-      if (step_count % steps_per_rev == 0) {
+      if (step_count % steps_per_rev / 2 == 0) {
          direction = ~direction;
       }
         
