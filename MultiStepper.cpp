@@ -86,11 +86,11 @@ void MultiStepper::step(uint8_t direction) {
     uint8_t bit_shift = 2 * motor;
     if (direction & 1 << bit_shift) {
       //move forward
-      incrementStep(motor);
+      incrementMotorCounters(motor);
     }
     else if (direction & 0b10 << bit_shift) {
       //move backwards
-      decrementStep(motor);
+      decrementMotorCounters(motor);
     }
     mask |= steps[this->current_step[motor] % 4] << bit_shift;
   }
@@ -98,7 +98,7 @@ void MultiStepper::step(uint8_t direction) {
   *this->motor_port = mask & this->motor_mask;
 }
 
-void MultiStepper::decrementStep(int motor) {
+void MultiStepper::decrementMotorCounters(int motor) {
   int *current_step = &this->current_step[motor];
   if (0 == *current_step) {
     *current_step = this->steps_per_revolution;
@@ -106,7 +106,7 @@ void MultiStepper::decrementStep(int motor) {
   (*current_step)--;
 }
 
-void MultiStepper::incrementStep(int motor) {
+void MultiStepper::incrementMotorCounters(int motor) {
   int *current_step = &this->current_step[motor];
   (*current_step)++;
   if (*current_step == this->steps_per_revolution) {
