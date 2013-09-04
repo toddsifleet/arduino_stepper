@@ -117,7 +117,9 @@ void MultiStepper::decrementMotorCounters(int motor) {
 
 void MultiStepper::incrementMotorCounters(int motor) {
   this->motor_position[motor]++;
-  this->motor_step[motor] = ++this->motor_step[motor] % 4;
+  if (4 == ++this->motor_step[motor]){
+    this->motor_step[motor] = 0;
+  }
 }
 
 void MultiStepper::setPrinter (Print & p) {
