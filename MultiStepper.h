@@ -62,7 +62,7 @@ class MultiStepper {
     volatile uint8_t *limit_port;
 
     //motor state data
-    int motor_step[4];
+    uint8_t motor_step[4];
     long motor_position[4];
 };
 

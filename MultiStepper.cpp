@@ -109,19 +109,15 @@ void MultiStepper::step(uint8_t direction) {
 }
 
 void MultiStepper::decrementMotorCounters(int motor) {
-  int *motor_step = &this->motor_step[motor];
-  if (0 == *motor_step) {
-    *motor_step = this->steps_per_revolution;
+  this->motor_position[motor]--;
+  if (! this->motor_step[motor]--) {
+    this->motor_step[motor] = 3;
   }
-  (*motor_step)--;
 }
 
 void MultiStepper::incrementMotorCounters(int motor) {
-  int *motor_step = &this->motor_step[motor];
-  (*motor_step)++;
-  if (*motor_step == this->steps_per_revolution) {
-    *motor_step = 0;
-  }
+  this->motor_position[motor]++;
+  this->motor_step[motor] = ++this->motor_step[motor] % 4;
 }
 
 void MultiStepper::setPrinter (Print & p) {
