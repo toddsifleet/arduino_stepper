@@ -63,7 +63,7 @@ class MultiStepper {
 
     //motor state data
     int current_step[4];
-    long position[4];
+    long motor_position[4];
 };
 
 #endif
