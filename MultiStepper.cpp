@@ -14,7 +14,8 @@ MultiStepper::MultiStepper(
   volatile uint8_t *motor_port,
   volatile uint8_t *motor_port_ddr,
   uint8_t motor_mask,
-  int steps_per_revolution ) {
+  int steps_per_revolution ) 
+{
 
   //init motor state
   for (uint8_t i = 0; i < 4; i++) {
@@ -37,7 +38,8 @@ MultiStepper::MultiStepper(
   volatile uint8_t *limit_port,
   volatile uint8_t *limit_port_ddr,
   uint8_t limit_mask,
-  int steps_per_revolution ) {
+  int steps_per_revolution ) 
+{
 
   MultiStepper(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
   initLimit(limit_port, limit_port_ddr, limit_mask);
@@ -56,7 +58,8 @@ void MultiStepper::printArray(char *label, int array[], int length) {
 void MultiStepper::initLimit(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
-  uint8_t mask) {
+  uint8_t mask) 
+{
   this->has_limit = true;
   this->limit_port = port;
   *ddr |= mask;
@@ -67,7 +70,8 @@ void MultiStepper::initMotor(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
   uint8_t mask,
-  int steps_per_revolution ) {
+  int steps_per_revolution ) 
+{
   this->motor_mask = mask;
   *ddr |= mask;
   this->steps_per_revolution = steps_per_revolution;
