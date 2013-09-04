@@ -17,12 +17,6 @@ MultiStepper::MultiStepper(
   int steps_per_revolution ) 
 {
 
-  //init motor state
-  for (uint8_t i = 0; i < 4; i++) {
-    this->motor_step[i] = 0;
-    this->motor_position[i] = 0;
-  }
-
   initMotor(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
 
   //by default we assume no limit switches
@@ -77,6 +71,8 @@ void MultiStepper::initMotor(
   this->steps_per_revolution = steps_per_revolution;
   this->motor_port = port;
 
+
+  //find first and last motor
   bool found_first = false;
   for (uint8_t i = 0; i < 4; i++) {
     if (this->motor_mask & (1 << (2 * i))) {
@@ -86,6 +82,12 @@ void MultiStepper::initMotor(
       }
       this->last_motor = i;
     }
+  }
+
+  //init motor state
+  for (uint8_t i = 0; i < 4; i++) {
+    this->motor_step[i] = 0;
+    this->motor_position[i] = 0;
   }
 }
 
