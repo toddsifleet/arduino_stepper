@@ -28,7 +28,7 @@ class MultiStepper {
     bool has_limit;
     void step(uint8_t direction);
 
-    void setNoLimit();
+    void setNoLimits();
 
     void setPrinter (Print & p);
 
@@ -39,7 +39,7 @@ class MultiStepper {
       uint8_t mask,
       int steps_per_revolution
     );
-    void initLimit(
+    void initLimits(
       volatile uint8_t *port,
       volatile uint8_t *ddr,
       uint8_t mask

@@ -18,7 +18,7 @@ MultiStepper::MultiStepper(
 {
 
   initMotors(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
-  setNoLimit();
+  setNoLimits();
 }
 
 MultiStepper::MultiStepper(
@@ -32,7 +32,7 @@ MultiStepper::MultiStepper(
 {
 
   initMotors(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
-  initLimit(limit_port, limit_port_ddr, limit_mask);
+  initLimits(limit_port, limit_port_ddr, limit_mask);
 }
 
 void MultiStepper::printArray(char *label, int array[], int length) {
@@ -45,13 +45,13 @@ void MultiStepper::printArray(char *label, int array[], int length) {
   this->printer->write("\n");
 }
 
-void MultiStepper::setNoLimit(){
+void MultiStepper::setNoLimits(){
   this->limit_port = NULL;
   this->limit_mask = NULL;
   this->has_limit = false;
 }
 
-void MultiStepper::initLimit(
+void MultiStepper::initLimits(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
   uint8_t mask) 
