@@ -33,7 +33,7 @@ class MultiStepper {
     void setPrinter (Print & p);
 
   private:
-    void initMotor(
+    void initMotors(
       volatile uint8_t *port,
       volatile uint8_t *ddr,
       uint8_t mask,
