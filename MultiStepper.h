@@ -28,6 +28,8 @@ class MultiStepper {
     bool has_limit;
     void step(uint8_t direction);
 
+    void setNoLimit();
+
     void setPrinter (Print & p);
 
   private:

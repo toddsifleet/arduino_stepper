@@ -18,9 +18,7 @@ MultiStepper::MultiStepper(
 {
 
   initMotor(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
-
-  //by default we assume no limit switches
-  this->has_limit = false;
+  setNoLimit();
 }
 
 MultiStepper::MultiStepper(
@@ -45,6 +43,12 @@ void MultiStepper::printArray(char *label, int array[], int length) {
     this->printer->print(array[i]);
   }
   this->printer->write("\n");
+}
+
+void MultiStepper::setNoLimit(){
+  this->limit_port = NULL;
+  this->limit_mask = NULL;
+  this->has_limit = false;
 }
 
 void MultiStepper::initLimit(
