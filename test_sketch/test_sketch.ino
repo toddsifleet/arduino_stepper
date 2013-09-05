@@ -2,7 +2,12 @@
 
 int steps_per_rev = 200 * 32;
 byte motor_mask = 0b00111111;
-MultiStepper stepper_controller(&PORTA, &DDRA, motor_mask, steps_per_rev);
+
+//3 Motors on PORTA and no limit switches
+//MultiStepper stepper_controller(&PORTA, &DDRA, motor_mask, steps_per_rev);
+
+//3 Motors on PORTA and 3 limit switches on PORTC
+MultiStepper stepper_controller(&PORTA, &DDRA, motor_mask, &PINC, &DDRC, motor_mask, steps_per_rev);
 
 
 long last_step;
@@ -18,7 +23,7 @@ byte direction = 0b101010;
 void loop() {
     if (millis() - last_step >= 1) {
       step_count++;
-      if (step_count % steps_per_rev / 2 == 0) {
+      if (step_count % steps_per_rev == 0) {
          direction = ~direction;
       }
         

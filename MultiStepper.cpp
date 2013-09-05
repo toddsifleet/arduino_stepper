@@ -21,8 +21,6 @@ MultiStepper::MultiStepper(
 
   //by default we assume no limit switches
   this->has_limit = false;
-
-  this->printer = NULL;
 }
 
 MultiStepper::MultiStepper(
@@ -35,7 +33,7 @@ MultiStepper::MultiStepper(
   int steps_per_revolution ) 
 {
 
-  MultiStepper(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
+  initMotor(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
   initLimit(limit_port, limit_port_ddr, limit_mask);
 }
 
@@ -56,7 +54,7 @@ void MultiStepper::initLimit(
 {
   this->has_limit = true;
   this->limit_port = port;
-  *ddr |= mask;
+  *ddr = 0;
   this->limit_mask = mask;
 }
 
@@ -98,11 +96,15 @@ void MultiStepper::step(uint8_t direction) {
     uint8_t bit_shift = 2 * motor;
     if (direction & 1 << bit_shift) {
       //move forward
-      incrementMotorCounters(motor);
+      if (!this->has_limit || !(*this->limit_port & 1 << bit_shift)) {
+        incrementMotorCounters(motor);
+      }
     }
     else if (direction & 0b10 << bit_shift) {
       //move backwards
-      decrementMotorCounters(motor);
+      if (!this->has_limit || !(*this->limit_port & 0b10 << bit_shift)) {
+        decrementMotorCounters(motor);
+      }
     }
     mask |= steps[this->motor_step[motor] % 4] << bit_shift;
   }
