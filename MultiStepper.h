@@ -31,6 +31,8 @@ class MultiStepper {
     void setNoLimits();
 
     void setPrinter (Print & p);
+    
+    void setHome();
 
   private:
     void initMotors(

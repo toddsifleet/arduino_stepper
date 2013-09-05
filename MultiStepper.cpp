@@ -62,6 +62,12 @@ void MultiStepper::initLimits(
   this->limit_mask = mask;
 }
 
+void MultiStepper::setHome() {
+  for (uint8_t i = 0; i < 4; i++) {
+    this->motor_position[i] = 0;
+  }
+}
+
 void MultiStepper::initMotors(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
