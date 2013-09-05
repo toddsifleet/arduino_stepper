@@ -78,7 +78,7 @@ void MultiStepper::initMotor(
     this->motor_step[i] = 0;
     this->motor_position[i] = 0;
     if (this->motor_mask & (1 << (2 * i))) {
-      if (found_first) {
+      if (!found_first) {
         found_first = true;
         this->first_motor = i;
       }
