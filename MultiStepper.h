@@ -30,6 +30,7 @@ class MultiStepper {
 
     void setPrinter (Print & p);
 
+    void setHome();
     void goTo(long *coordiantes);
 
   private:

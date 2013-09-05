@@ -14,7 +14,7 @@ MultiStepper::MultiStepper(
   volatile uint8_t *motor_port,
   volatile uint8_t *motor_port_ddr,
   uint8_t motor_mask,
-  int steps_per_revolution ) 
+  int steps_per_revolution )
 {
 
   initMotors(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
@@ -28,7 +28,7 @@ MultiStepper::MultiStepper(
   volatile uint8_t *limit_port,
   volatile uint8_t *limit_port_ddr,
   uint8_t limit_mask,
-  int steps_per_revolution ) 
+  int steps_per_revolution )
 {
 
   initMotors(motor_port, motor_port_ddr, motor_mask, steps_per_revolution);
@@ -54,7 +54,7 @@ void MultiStepper::setNoLimits(){
 void MultiStepper::initLimits(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
-  uint8_t mask) 
+  uint8_t mask)
 {
   this->has_limit = true;
   this->limit_port = port;
@@ -72,11 +72,11 @@ void MultiStepper::initMotors(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
   uint8_t mask,
-  int steps_per_revolution ) 
+  int steps_per_revolution)
 {
   this->motor_mask = mask;
   *ddr |= mask;
-  this->steps_per_revolution = steps_per_revolution;
+  setStepsPerRevolution(steps_per_revolution);
   this->motor_port = port;
 
   bool found_first = false;
@@ -91,6 +91,10 @@ void MultiStepper::initMotors(
       this->last_motor = i;
     }
   }
+}
+
+void MultiStepper::setStepsPerRevolution(int steps) {
+  this->steps_per_revolution = steps;
 }
 
 void MultiStepper::step(uint8_t direction) {
