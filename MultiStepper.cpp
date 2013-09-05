@@ -90,26 +90,25 @@ void MultiStepper::initMotor(
 }
 
 void MultiStepper::step(uint8_t direction) {
-  volatile uint8_t mask = 0;
+  volatile uint8_t port_mask = 0;
   for (uint8_t motor = this->first_motor; motor <= this->last_motor; motor++) {
-
-    uint8_t bit_shift = 2 * motor;
-    if (direction & 1 << bit_shift) {
-      //move forward
-      if (!this->has_limit || !(*this->limit_port & 1 << bit_shift)) {
+    uint8_t bit_mask = 1 << 2 * motor;
+    if (direction & bit_mask) {
+      if (!this->has_limit || !(*this->limit_port & bit_mask)) {
+        //move forward
         incrementMotorCounters(motor);
       }
     }
-    else if (direction & 0b10 << bit_shift) {
-      //move backwards
-      if (!this->has_limit || !(*this->limit_port & 0b10 << bit_shift)) {
+    else if (direction & bit_mask << 1) {
+      if (!this->has_limit || !(*this->limit_port & bit_mask << 1)) {
+        //move backwards
         decrementMotorCounters(motor);
       }
     }
-    mask |= steps[this->motor_step[motor] % 4] << bit_shift;
+    port_mask |= steps[this->motor_step[motor] % 4] << motor * 2;
   }
 
-  *this->motor_port = mask & this->motor_mask;
+  *this->motor_port = port_mask & this->motor_mask;
 }
 
 void MultiStepper::decrementMotorCounters(int motor) {
