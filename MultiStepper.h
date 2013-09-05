@@ -23,16 +23,14 @@ class MultiStepper {
       int steps_per_revolution
     );
 
-    int steps_per_revolution;
+    void setNoLimits();
+    void setStepsPerRevolution(int steps);
 
-    bool has_limit;
     void step(uint8_t direction);
 
-    void setNoLimits();
-
     void setPrinter (Print & p);
-    
-    void setHome();
+
+    void goTo(long *coordiantes);
 
   private:
     void initMotors(
@@ -55,19 +53,22 @@ class MultiStepper {
     void printArray(char *label, int array[], int length);
     Print *printer;
 
-    //motor pin config data
+    //motor config data
+    int steps_per_revolution;
     uint8_t motor_mask;
-    uint8_t limit_mask;
     uint8_t first_motor;
     uint8_t last_motor;
-
-    //motor ports
     volatile uint8_t *motor_port;
+
+    //limit config data
+    bool has_limit;
+    uint8_t limit_mask;
     volatile uint8_t *limit_port;
 
     //motor state data
     uint8_t motor_step[4];
     long motor_position[4];
+
 };
 
 #endif
