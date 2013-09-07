@@ -77,6 +77,10 @@ void MultiStepper::setStepsPerRevolution(int steps) {
   this->steps_per_revolution = steps;
 }
 
+void MultiStepper::setSpeed(int rpm) {
+  this->step_delay = 60L * 1000L / this->steps_per_revolution / rpm;
+}
+
 //MOVEMENT FUNCTIONS
 void MultiStepper::step(uint8_t direction) {
   volatile uint8_t port_mask = 0;
@@ -99,7 +103,6 @@ void MultiStepper::step(uint8_t direction) {
 
   *this->motor_port = port_mask & this->motor_mask;
 }
-
 
 //UPDATE STATE FUNCTIONS
 void MultiStepper::setHome() {

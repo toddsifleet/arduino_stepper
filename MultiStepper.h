@@ -29,6 +29,8 @@ class MultiStepper {
       volatile uint8_t *ddr
     );
     void setStepsPerRevolution(int steps);
+    void setSpeed(int rpm);
+
     void setPrinter (Print & p);
 
     void setHome();
@@ -55,6 +57,7 @@ class MultiStepper {
 
     //motor config data
     int steps_per_revolution;
+    long step_delay;
     uint8_t motor_mask;
     uint8_t motor_count;
     volatile uint8_t *motor_port;
