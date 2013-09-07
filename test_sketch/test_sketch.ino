@@ -16,36 +16,46 @@ void setup() {
 }
 
 void osscilate() {
-  long direction[] = {1, 1, 1};
-  long step_count = 0;
   while (true) {
-    step_count++;
-    if (step_count % steps_per_rev == 0) {
-      for (int i = 0; i < 3; i++) {
-        direction[i] *= -1;
-      }
-    }
-    stepper_controller.move(direction);
+    stepper_controller.move(
+      steps_per_rev,
+      steps_per_rev,
+      steps_per_rev
+    );
+
+    stepper_controller.move(
+      -1 * steps_per_rev,
+      -1 * steps_per_rev,
+      -1 * steps_per_rev
+    );
   }
 }
 
 void two_steps_forward_one_step_backwards(){
   while (true) {
-    long direction[] = {1, 1, 1};
-    for (int i = 0; i < steps_per_rev * 2; i++) {
-      stepper_controller.move(direction);
-    }
-    for (int i = 0; i < 3; i++) {
-      direction[i] *= -1;
-    }
-    for (int i = 0; i < steps_per_rev; i++) {
-      stepper_controller.move(direction);
-    }
+    stepper_controller.move(
+      2 * steps_per_rev,
+      2 * steps_per_rev,
+      2 * steps_per_rev
+    );
+
+    stepper_controller.move(
+      -1 * steps_per_rev,
+      -1 * steps_per_rev,
+      -1 * steps_per_rev
+    );
   }
 
 }
 
+void box(){
+  stepper_controller.move((long)steps_per_rev);
+  stepper_controller.move(0, (long)steps_per_rev);
+  stepper_controller.move(-1 * (long)steps_per_rev);
+  stepper_controller.move(0, -1 * (long)steps_per_rev);
+}
+
 void loop() {
-  two_steps_forward_one_step_backwards();
+  box();
 }
 

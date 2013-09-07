@@ -104,19 +104,21 @@ void MultiStepper::step(int direction[]) {
   this->last_step_time = micros();
 }
 
-void MultiStepper::goTo(long coordinates[]) {
-  long vector[motor_count];
-  for (uint8_t motor; motor < motor_count; motor++) {
-    vector[motor] = coordinates[motor] - motor_position[motor];
-  }
-  move(vector);
+void MultiStepper::goTo(long motor_1, long motor_2, long motor_3, long motor_4) {
+  move(
+    motor_1 - motor_position[0],
+    motor_2 - motor_position[1],
+    motor_3 - motor_position[2],
+    motor_4 - motor_position[3]
+  );
 }
 
 void MultiStepper::goHome() {
-  goTo(HOME);
+  goTo();
 }
 
-void MultiStepper::move(long vector[]) {
+void MultiStepper::move(long motor_1, long motor_2, long motor_3, long motor_4) {
+  long vector[4] = {motor_1, motor_2, motor_3, motor_4};
   long steps[motor_count];
   int direction[motor_count];
   long steps_remaining = 0;
