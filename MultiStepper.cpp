@@ -3,12 +3,14 @@
 
 
 //these are used to determine what pins to set for each step
-const uint8_t steps[] = {
+const uint8_t STEPS[] = {
   0b10,
   0b11,
   0b01,
   0b00
 };
+
+long HOME[] = {0, 0, 0, 0};
 
 //CONSTRUCTOR FUNCTIONS
 MultiStepper::MultiStepper(
@@ -95,11 +97,23 @@ void MultiStepper::step(int direction[]) {
       //move backwards
       decrementMotorCounters(motor);
     }
-    port_mask |= steps[motor_step[motor] % 4] << motor * 2;
+    port_mask |= STEPS[motor_step[motor] % 4] << motor * 2;
   }
 
   *this->motor_port = port_mask & this->motor_mask;
   this->last_step_time = micros();
+}
+
+void MultiStepper::goTo(long coordinates[]) {
+  long vector[motor_count];
+  for (uint8_t motor; motor < motor_count; motor++) {
+    vector[motor] = coordinates[motor] - motor_position[motor];
+  }
+  move(vector);
+}
+
+void MultiStepper::goHome() {
+  goTo(HOME);
 }
 
 void MultiStepper::move(long vector[]) {

@@ -38,6 +38,7 @@ class MultiStepper {
     void step(int direction[]);
     void goTo(long coordiantes[]);
     void move(long vector[]);
+    void goHome();
 
   private:
     void initMotors(
