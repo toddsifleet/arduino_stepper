@@ -69,6 +69,7 @@ class MultiStepper {
     //motor state data
     uint8_t motor_step[4];
     long motor_position[4];
+    long last_step_time;
 
 };
 

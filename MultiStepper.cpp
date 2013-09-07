@@ -102,6 +102,7 @@ void MultiStepper::step(uint8_t direction) {
   }
 
   *this->motor_port = port_mask & this->motor_mask;
+  this->last_step_time = millis();
 }
 
 //UPDATE STATE FUNCTIONS
