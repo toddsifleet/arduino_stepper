@@ -1,13 +1,13 @@
 #include <MultiStepper.h>
 
 int steps_per_rev = 200 * 32;
-byte motor_mask = 0b00111111;
+byte motor_count = 3;
 
 //3 Motors on PORTA and no limit switches
-//MultiStepper stepper_controller(&PORTA, &DDRA, motor_mask, steps_per_rev);
+//MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, steps_per_rev);
 
 //3 Motors on PORTA and 3 limit switches on PORTC
-MultiStepper stepper_controller(&PORTA, &DDRA, motor_mask, &PINC, &DDRC, motor_mask, steps_per_rev);
+MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, &PINC, &DDRC, steps_per_rev);
 
 
 long last_step;

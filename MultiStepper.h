@@ -9,21 +9,25 @@ class MultiStepper {
     MultiStepper(
       volatile uint8_t *motor_port,
       volatile uint8_t *motor_port_ddr,
-      uint8_t motor_mask,
+      uint8_t motor_count,
       volatile uint8_t *limit_port,
       volatile uint8_t *limit_port_ddr,
-      uint8_t limit_mask,
       int steps_per_revolution
     );
 
     MultiStepper(
       volatile uint8_t *motor_port,
       volatile uint8_t *motor_port_ddr,
-      uint8_t motor_mask,
+      uint8_t motor_count,
       int steps_per_revolution
     );
 
     void setNoLimits();
+    void setLimits(
+      volatile uint8_t *port,
+      volatile uint8_t *ddr
+    );
+
     void setStepsPerRevolution(int steps);
 
     void step(uint8_t direction);
@@ -37,15 +41,11 @@ class MultiStepper {
     void initMotors(
       volatile uint8_t *port,
       volatile uint8_t *ddr,
-      uint8_t mask,
+      uint8_t motor_count,
       int steps_per_revolution
     );
-    void initLimits(
-      volatile uint8_t *port,
-      volatile uint8_t *ddr,
-      uint8_t mask
-    );
 
+    uint8_t calculateMask(uint8_t n);
     void stepMotor(int this_step);
     void incrementMotorCounters(int motor);
     void decrementMotorCounters(int motor);
@@ -57,13 +57,11 @@ class MultiStepper {
     //motor config data
     int steps_per_revolution;
     uint8_t motor_mask;
-    uint8_t first_motor;
-    uint8_t last_motor;
+    uint8_t motor_count;
     volatile uint8_t *motor_port;
 
     //limit config data
     bool has_limit;
-    uint8_t limit_mask;
     volatile uint8_t *limit_port;
 
     //motor state data
