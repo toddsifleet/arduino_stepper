@@ -29,7 +29,7 @@ class MultiStepper {
       volatile uint8_t *ddr
     );
     void setStepsPerRevolution(int steps);
-    void setSpeed(long rpm);
+    void setSpeed(int rpm);
 
     void setPrinter (Print & p);
 

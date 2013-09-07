@@ -78,8 +78,8 @@ void MultiStepper::setStepsPerRevolution(int steps) {
   this->steps_per_revolution = steps;
 }
 
-void MultiStepper::setSpeed(long rpm) {
-  this->step_delay = 60L * 1000L * 1000L / this->steps_per_revolution / rpm;
+void MultiStepper::setSpeed(int rpm) {
+  this->step_delay = 60L * 1000L * 1000L / this->steps_per_revolution / (long)rpm;
 }
 
 //MOVEMENT FUNCTIONS
