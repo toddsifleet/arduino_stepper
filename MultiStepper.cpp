@@ -10,8 +10,6 @@ const uint8_t STEPS[] = {
   0b00
 };
 
-long HOME[] = {0, 0, 0, 0};
-
 //CONSTRUCTOR FUNCTIONS
 MultiStepper::MultiStepper(
   volatile uint8_t *motor_port,
