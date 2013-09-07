@@ -48,14 +48,14 @@ void two_steps_forward_one_step_backwards(){
 
 }
 
-void box(){
-  stepper_controller.move((long)steps_per_rev);
-  stepper_controller.move(0, (long)steps_per_rev);
-  stepper_controller.move(-1 * (long)steps_per_rev);
-  stepper_controller.move(0, -1 * (long)steps_per_rev);
+void box(long size){
+  stepper_controller.move(size * steps_per_rev);
+  stepper_controller.move(0, size * steps_per_rev);
+  stepper_controller.move(-size * steps_per_rev);
+  stepper_controller.move(0, -size * steps_per_rev);
 }
 
 void loop() {
-  box();
+  box(5);
 }
 
