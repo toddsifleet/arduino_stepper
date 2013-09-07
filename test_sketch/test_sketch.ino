@@ -19,7 +19,6 @@ void setup() {
   Serial.begin(9600);
 }
 
-//byte direction = 0b101010;
 int direction[] = {1, 1, 1};
 void loop() {
     if (millis() - last_step >= 1) {
