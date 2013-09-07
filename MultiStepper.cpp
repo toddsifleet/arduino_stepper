@@ -82,7 +82,7 @@ void MultiStepper::setSpeed(int rpm) {
   this->step_delay = 60L * 1000L * 1000L / this->steps_per_revolution / (long)rpm;
 }
 
-//MOVEMENT FUNCTIONS
+// MOVEMENT FUNCTIONS
 void MultiStepper::step(int direction[]) {
   volatile uint8_t port_mask = 0;
   for (uint8_t motor = 0; motor < motor_count; motor++) {
@@ -168,8 +168,8 @@ void MultiStepper::incrementMotorCounters(int motor) {
 
 //UTILITY FUNCTIONS
 
-//given a returns a mask where everybit less than (n-1) * 2 is set to one
-uint8_t MultiStepper::calculateMask(uint8_t n) {
+//given n returns a mask where everybit less than (n-1) * 2 is set to one
+uint8_t calculateMask(uint8_t n) {
   uint8_t mask = 0;
   for (n; n > 0; n--) {
     mask |= 0b11 << (2 * (n - 1));

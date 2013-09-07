@@ -60,6 +60,6 @@ void box(long size){
 }
 
 void loop() {
-  osscilate(60L);
+  osscilate(6L);
 }
 

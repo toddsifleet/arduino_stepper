@@ -4,6 +4,8 @@
 #ifndef MultiStepper_h
 #define MultiStepper_h`
 
+uint8_t calculateMask(uint8_t n);
+
 class MultiStepper {
   public:
     //CONSTRUCTORS
@@ -23,6 +25,7 @@ class MultiStepper {
       int steps_per_revolution
     );
 
+    // CONFIGURATION FUNCTIONS
     void setNoLimits();
     void setLimits(
       volatile uint8_t *port,
@@ -35,8 +38,8 @@ class MultiStepper {
 
     void setHome();
 
+    // MOVEMENT FUNCTIONS
     void step(int direction[]);
-    // void goTo(long coordiantes[]);
     void goTo(
       long motor_1 = 0,
       long motor_2 = 0,
@@ -59,8 +62,6 @@ class MultiStepper {
       int steps_per_revolution
     );
 
-    uint8_t calculateMask(uint8_t n);
-    void stepMotor(int this_step);
     void incrementMotorCounters(int motor);
     void decrementMotorCounters(int motor);
 
