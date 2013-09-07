@@ -6,6 +6,7 @@
 
 class MultiStepper {
   public:
+    //CONSTRUCTORS
     MultiStepper(
       volatile uint8_t *motor_port,
       volatile uint8_t *motor_port_ddr,
@@ -27,14 +28,12 @@ class MultiStepper {
       volatile uint8_t *port,
       volatile uint8_t *ddr
     );
-
     void setStepsPerRevolution(int steps);
-
-    void step(uint8_t direction);
-
     void setPrinter (Print & p);
 
     void setHome();
+
+    void step(uint8_t direction);
     void goTo(long *coordiantes);
 
   private:

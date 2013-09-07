@@ -10,6 +10,7 @@ const uint8_t steps[] = {
   0b00
 };
 
+//CONSTRUCTOR FUNCTIONS
 MultiStepper::MultiStepper(
   volatile uint8_t *motor_port,
   volatile uint8_t *motor_port_ddr,
@@ -34,6 +35,11 @@ MultiStepper::MultiStepper(
   setLimits(limit_port, limit_port_ddr);
 }
 
+// CONFIGURATION FUNCTIONS
+void MultiStepper::setPrinter (Print & p) {
+  this->printer = &p;
+}
+
 void MultiStepper::setNoLimits(){
   this->limit_port = NULL;
   this->has_limit = false;
@@ -46,12 +52,6 @@ void MultiStepper::setLimits(
   this->has_limit = true;
   this->limit_port = port;
   *ddr = 0;
-}
-
-void MultiStepper::setHome() {
-  for (uint8_t i = 0; i < 4; i++) {
-    this->motor_position[i] = 0;
-  }
 }
 
 void MultiStepper::initMotors(
@@ -77,6 +77,7 @@ void MultiStepper::setStepsPerRevolution(int steps) {
   this->steps_per_revolution = steps;
 }
 
+//MOVEMENT FUNCTIONS
 void MultiStepper::step(uint8_t direction) {
   volatile uint8_t port_mask = 0;
   for (uint8_t motor = 0; motor < this->motor_count; motor++) {
@@ -99,6 +100,14 @@ void MultiStepper::step(uint8_t direction) {
   *this->motor_port = port_mask & this->motor_mask;
 }
 
+
+//UPDATE STATE FUNCTIONS
+void MultiStepper::setHome() {
+  for (uint8_t i = 0; i < 4; i++) {
+    this->motor_position[i] = 0;
+  }
+}
+
 void MultiStepper::decrementMotorCounters(int motor) {
   this->motor_position[motor]--;
   if (! this->motor_step[motor]--) {
@@ -111,10 +120,6 @@ void MultiStepper::incrementMotorCounters(int motor) {
   if (4 == ++this->motor_step[motor]){
     this->motor_step[motor] = 0;
   }
-}
-
-void MultiStepper::setPrinter (Print & p) {
-  this->printer = &p;
 }
 
 
