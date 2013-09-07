@@ -34,16 +34,6 @@ MultiStepper::MultiStepper(
   setLimits(limit_port, limit_port_ddr);
 }
 
-void MultiStepper::printArray(char *label, int array[], int length) {
-  if (!this->printer) return;
-  this->printer->print(label);
-  for (uint8_t i = 0; i < length; i++) {
-    if (0 < i) Serial.write(", ");
-    this->printer->print(array[i]);
-  }
-  this->printer->write("\n");
-}
-
 void MultiStepper::setNoLimits(){
   this->limit_port = NULL;
   this->has_limit = false;
@@ -62,14 +52,6 @@ void MultiStepper::setHome() {
   for (uint8_t i = 0; i < 4; i++) {
     this->motor_position[i] = 0;
   }
-}
-
-uint8_t MultiStepper::calculateMask(uint8_t n) {
-  uint8_t mask = 0;
-  for (n; n > 0; n--) {
-    mask |= 0b11 << (2 * (n - 1));
-  }
-  return mask;
 }
 
 void MultiStepper::initMotors(
@@ -133,4 +115,27 @@ void MultiStepper::incrementMotorCounters(int motor) {
 
 void MultiStepper::setPrinter (Print & p) {
   this->printer = &p;
+}
+
+
+//UTILITY FUNCTIONS
+
+//given a returns a mask where everybit less than (n-1) * 2 is set to one
+uint8_t MultiStepper::calculateMask(uint8_t n) {
+  uint8_t mask = 0;
+  for (n; n > 0; n--) {
+    mask |= 0b11 << (2 * (n - 1));
+  }
+  return mask;
+}
+
+//for debugging currently
+void MultiStepper::printArray(char *label, int array[], int length) {
+  if (!this->printer) return;
+  this->printer->print(label);
+  for (uint8_t i = 0; i < length; i++) {
+    if (0 < i) Serial.write(", ");
+    this->printer->print(array[i]);
+  }
+  this->printer->write("\n");
 }
