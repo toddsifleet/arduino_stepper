@@ -11,7 +11,7 @@ MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, &PINC, &DDRC, steps_
 
 void setup() {
   stepper_controller.setPrinter(Serial);
-  stepper_controller.setSpeed(100);
+  stepper_controller.setSpeed(10);
   Serial.begin(9600);
 }
 
@@ -29,7 +29,23 @@ void osscilate() {
   }
 }
 
+void two_steps_forward_one_step_backwards(){
+  while (true) {
+    long direction[] = {1, 1, 1};
+    for (int i = 0; i < steps_per_rev * 2; i++) {
+      stepper_controller.move(direction);
+    }
+    for (int i = 0; i < 3; i++) {
+      direction[i] *= -1;
+    }
+    for (int i = 0; i < steps_per_rev; i++) {
+      stepper_controller.move(direction);
+    }
+  }
+
+}
+
 void loop() {
-  osscilate();
+  two_steps_forward_one_step_backwards();
 }
 
