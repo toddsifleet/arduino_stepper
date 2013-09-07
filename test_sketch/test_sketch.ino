@@ -15,19 +15,23 @@ void setup() {
   Serial.begin(9600);
 }
 
-void osscilate() {
+void osscilate(long speed) {
+  stepper_controller.setSpeed(speed);
   while (true) {
+    long start_time = millis();
     stepper_controller.move(
       steps_per_rev,
       steps_per_rev,
       steps_per_rev
     );
-
+    Serial.println(millis() - start_time);
+    start_time = millis();
     stepper_controller.move(
       -1 * steps_per_rev,
       -1 * steps_per_rev,
       -1 * steps_per_rev
     );
+    Serial.println(millis() - start_time);
   }
 }
 
@@ -56,6 +60,6 @@ void box(long size){
 }
 
 void loop() {
-  box(5);
+  osscilate(60L);
 }
 

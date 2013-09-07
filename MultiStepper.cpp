@@ -97,7 +97,8 @@ void MultiStepper::step(int direction[]) {
     }
     port_mask |= STEPS[motor_step[motor] % 4] << motor * 2;
   }
-
+  // wait here to control speed;
+  while (micros() - last_step_time <= step_delay) {};
   *this->motor_port = port_mask & this->motor_mask;
   this->last_step_time = micros();
 }
@@ -130,18 +131,16 @@ void MultiStepper::move(long motor_1, long motor_2, long motor_3, long motor_4) 
     }
   }
   while (steps_remaining > 0) {
-    if (micros() - last_step_time >= step_delay) {
-      for (uint8_t i = 0; i < motor_count; i++) {
-        if (0 == steps[i]) {
-          direction[i] = 0;
-        }
-        else if (0 != direction[i]) {
-          steps[i]--;
-        }
+    for (uint8_t i = 0; i < motor_count; i++) {
+      if (0 == steps[i]) {
+        direction[i] = 0;
       }
-      step(direction);
-      steps_remaining--;
+      else if (0 != direction[i]) {
+        steps[i]--;
+      }
     }
+    step(direction);
+    steps_remaining--;
   }
 }
 
