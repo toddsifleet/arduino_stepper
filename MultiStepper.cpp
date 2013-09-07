@@ -82,17 +82,17 @@ void MultiStepper::setSpeed(int rpm) {
 }
 
 //MOVEMENT FUNCTIONS
-void MultiStepper::step(uint8_t direction) {
+void MultiStepper::step(int direction[]) {
   volatile uint8_t port_mask = 0;
   for (uint8_t motor = 0; motor < this->motor_count; motor++) {
     uint8_t bit_mask = 1 << 2 * motor;
-    if (direction & bit_mask) {
+    if (1 == direction[motor]) {
       if (!this->has_limit || !(*this->limit_port & bit_mask)) {
         //move forward
         incrementMotorCounters(motor);
       }
     }
-    else if (direction & bit_mask << 1) {
+    else if (-1 == direction[motor]) {
       if (!this->has_limit || !(*this->limit_port & bit_mask << 1)) {
         //move backwards
         decrementMotorCounters(motor);
