@@ -29,7 +29,7 @@ class MultiStepper {
       volatile uint8_t *ddr
     );
     void setStepsPerRevolution(int steps);
-    void setSpeed(int rpm);
+    void setSpeed(long rpm);
 
     void setPrinter (Print & p);
 
@@ -37,6 +37,7 @@ class MultiStepper {
 
     void step(int direction[]);
     void goTo(long coordiantes[]);
+    void move(long vector[]);
 
   private:
     void initMotors(
@@ -69,7 +70,7 @@ class MultiStepper {
     //motor state data
     uint8_t motor_step[4];
     long motor_position[4];
-    long last_step_time;
+    unsigned long last_step_time;
 
 };
 

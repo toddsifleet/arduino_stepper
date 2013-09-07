@@ -66,6 +66,7 @@ void MultiStepper::initMotors(
 
   setStepsPerRevolution(steps_per_revolution);
   this->motor_port = port;
+  this->last_step_time = micros();
 
   for (uint8_t i = 0; i < 4; i++) {
     this->motor_step[i] = 0;
@@ -77,8 +78,8 @@ void MultiStepper::setStepsPerRevolution(int steps) {
   this->steps_per_revolution = steps;
 }
 
-void MultiStepper::setSpeed(int rpm) {
-  this->step_delay = 60L * 1000L / this->steps_per_revolution / rpm;
+void MultiStepper::setSpeed(long rpm) {
+  this->step_delay = 60L * 1000L * 1000L / this->steps_per_revolution / rpm;
 }
 
 //MOVEMENT FUNCTIONS
@@ -98,7 +99,36 @@ void MultiStepper::step(int direction[]) {
   }
 
   *this->motor_port = port_mask & this->motor_mask;
-  this->last_step_time = millis();
+  this->last_step_time = micros();
+}
+
+void MultiStepper::move(long vector[]) {
+  long steps[motor_count];
+  int direction[motor_count];
+  long steps_remaining = 0;
+  for (uint8_t motor = 0; motor < motor_count; motor++) {
+    if (vector[motor] < 0) { direction[motor] = -1; }
+    else if (vector[motor] > 0) { direction[motor] = 1; }
+    else { vector[motor] = 0; }
+    steps[motor] = abs(vector[motor]);
+    if (steps[motor] > steps_remaining) {
+      steps_remaining = steps[motor];
+    }
+  }
+  while (steps_remaining > 0) {
+    if (micros() - last_step_time >= step_delay) {
+      for (uint8_t i = 0; i < motor_count; i++) {
+        if (0 == steps[i]) {
+          direction[i] = 0;
+        }
+        else if (0 != direction[i]) {
+          steps[i]--;
+        }
+      }
+      step(direction);
+      steps_remaining--;
+    }
+  }
 }
 
 //UPDATE STATE FUNCTIONS
@@ -138,6 +168,7 @@ uint8_t MultiStepper::calculateMask(uint8_t n) {
 void MultiStepper::printArray(char *label, int array[], int length) {
   if (!this->printer) return;
   this->printer->print(label);
+  this->printer->print(": ");
   for (uint8_t i = 0; i < length; i++) {
     if (0 < i) Serial.write(", ");
     this->printer->print(array[i]);
