@@ -117,29 +117,51 @@ void MultiStepper::goHome() {
 }
 
 void MultiStepper::move(long motor_1, long motor_2, long motor_3, long motor_4) {
+  printArray("Current Pos", motor_position, 3);
   long vector[4] = {motor_1, motor_2, motor_3, motor_4};
+  printArray("Vector", vector, 3);
+  long total_steps[motor_count];
+
   long steps[motor_count];
   int direction[motor_count];
-  long steps_remaining = 0;
+  long steps_remaining;
+  long max_steps = 0;
   for (uint8_t motor = 0; motor < motor_count; motor++) {
     if (vector[motor] < 0) { direction[motor] = -1; }
     else if (vector[motor] > 0) { direction[motor] = 1; }
     else { vector[motor] = 0; }
     steps[motor] = abs(vector[motor]);
-    if (steps[motor] > steps_remaining) {
-      steps_remaining = steps[motor];
+    if (steps[motor] > max_steps) {
+      max_steps = steps[motor];
     }
+    total_steps[motor] = steps[motor];
   }
+  steps_remaining = max_steps;
   while (steps_remaining > 0) {
-    for (uint8_t i = 0; i < motor_count; i++) {
-      if (0 == steps[i]) {
-        direction[i] = 0;
+    int next_step[motor_count];
+    for (uint8_t motor = 0; motor < motor_count; motor++) {
+      if (0 == steps[motor]) {
+        next_step[motor] = 0;
       }
-      else if (0 != direction[i]) {
-        steps[i]--;
+      else if (0 != direction[motor]) {
+        if (total_steps[motor] == max_steps) {
+          next_step[motor] = direction[motor];
+        }
+        else {
+          long error_moved = abs(total_steps[motor] - max_steps*(steps[motor] - 1) / (steps_remaining - 1));
+          long error_not_moved = abs(total_steps[motor] - max_steps*steps[motor] / (steps_remaining - 1));
+          if (error_moved <= error_not_moved) {
+            next_step[motor] = direction[motor];
+          }
+          else {
+            next_step[motor] = 0;
+            continue;
+          }
+        }
+        steps[motor]--;
       }
     }
-    step(direction);
+    step(next_step);
     steps_remaining--;
   }
 }
@@ -178,7 +200,7 @@ uint8_t calculateMask(uint8_t n) {
 }
 
 //for debugging currently
-void MultiStepper::printArray(char *label, int array[], int length) {
+void MultiStepper::printArray(char *label, long array[], int length) {
   if (!this->printer) return;
   this->printer->print(label);
   this->printer->print(": ");
@@ -187,4 +209,20 @@ void MultiStepper::printArray(char *label, int array[], int length) {
     this->printer->print(array[i]);
   }
   this->printer->write("\n");
+}
+
+void MultiStepper::printArray(char *label, int array[], int length) {
+  long long_array[length];
+  for (uint8_t i = 0; i < length; i++) {
+    long_array[i]= (long)array[i];
+  }
+  printArray(label, long_array, length);
+}
+
+void MultiStepper::printArray(char *label, uint8_t array[], int length) {
+  long long_array[length];
+  for (uint8_t i = 0; i < length; i++) {
+    long_array[i]= (long)array[i];
+  }
+  printArray(label, long_array, length);
 }

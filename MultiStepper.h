@@ -8,7 +8,7 @@ uint8_t calculateMask(uint8_t n);
 
 class MultiStepper {
   public:
-    //CONSTRUCTORS
+    // CONSTRUCTORS
     MultiStepper(
       volatile uint8_t *motor_port,
       volatile uint8_t *motor_port_ddr,
@@ -66,7 +66,9 @@ class MultiStepper {
     void decrementMotorCounters(int motor);
 
     // for debugging currently
+    void printArray(char *label, uint8_t array[], int length);
     void printArray(char *label, int array[], int length);
+    void printArray(char *label, long array[], int length);
     Print *printer;
 
     //motor config data
