@@ -11,7 +11,7 @@ MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, &PINC, &DDRC, steps_
 
 void setup() {
   stepper_controller.setPrinter(Serial);
-  stepper_controller.setSpeed();
+  stepper_controller.setSpeed(60);
   Serial.begin(9600);
 }
 
@@ -21,15 +21,15 @@ void osscilate(long speed) {
     long start_time = millis();
     stepper_controller.move(
       steps_per_rev,
-      .5*steps_per_rev,
+      steps_per_rev,
       steps_per_rev
     );
     Serial.println(millis() - start_time);
     start_time = millis();
     stepper_controller.move(
       -1 * steps_per_rev,
-      -.5 * steps_per_rev,
-      -1 * steps_per_rev
+      -1 * steps_per_rev,
+      -1 * steps_per_rev 
     );
     Serial.println(millis() - start_time);
   }
@@ -59,12 +59,12 @@ void rectangle(long width, long height){
   stepper_controller.move(width);
   stepper_controller.move(0, height);
   stepper_controller.move(0, -height);
-  stepper_controller.move(-width, -height);
+  stepper_controller.move(-width, height);
   while (true) {};
 }
 
 void loop() {
-  rectangle(30000L, 15000L);
-//  osscilate(6);
+//  rectangle(60000L, 30000L);
+  osscilate(60);
 }
 

@@ -65,6 +65,8 @@ class MultiStepper {
     void incrementMotorCounters(int motor);
     void decrementMotorCounters(int motor);
 
+    void advanceMotors(volatile uint8_t port_mask);
+
     // for debugging currently
     void printArray(char *label, uint8_t array[], int length);
     void printArray(char *label, int array[], int length);
@@ -86,6 +88,7 @@ class MultiStepper {
     uint8_t motor_step[4];
     long motor_position[4];
     unsigned long last_step_time;
+    long step_delay_correction;
 
 };
 

@@ -66,7 +66,8 @@ void MultiStepper::initMotors(
 
   setStepsPerRevolution(steps_per_revolution);
   this->motor_port = port;
-  this->last_step_time = micros();
+  this->last_step_time = 0;
+  this->step_delay_correction = 0;
 
   for (uint8_t i = 0; i < 4; i++) {
     this->motor_step[i] = 0;
@@ -97,10 +98,20 @@ void MultiStepper::step(int direction[]) {
     }
     port_mask |= STEPS[motor_step[motor] % 4] << motor * 2;
   }
-  // wait here to control speed;
-  while (micros() - last_step_time <= step_delay) {};
+  advanceMotors(port_mask);
+}
+
+void MultiStepper::advanceMotors(volatile uint8_t port_mask) {
+  if (step_delay + step_delay_correction > 0) {
+    while (micros() - last_step_time <= step_delay + this->step_delay_correction) {};
+  }
   *this->motor_port = port_mask & this->motor_mask;
-  this->last_step_time = micros();
+
+  unsigned long current_step_time = micros();
+  if (0 != this->last_step_time) {
+    this->step_delay_correction += this->step_delay - (long)(current_step_time - this->last_step_time);
+  }
+  this->last_step_time = current_step_time;
 }
 
 void MultiStepper::goTo(long motor_1, long motor_2, long motor_3, long motor_4) {
@@ -137,6 +148,10 @@ void MultiStepper::move(long motor_1, long motor_2, long motor_3, long motor_4) 
     total_steps[motor] = steps[motor];
   }
   steps_remaining = max_steps;
+
+  // these need to be reset to adjust for delays
+  this->last_step_time = 0;
+  this->step_delay_correction = 0;
   while (steps_remaining > 0) {
     int next_step[motor_count];
     for (uint8_t motor = 0; motor < motor_count; motor++) {
