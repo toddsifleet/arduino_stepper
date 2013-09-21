@@ -149,9 +149,9 @@ void MultiStepper::move(long motor_1, long motor_2, long motor_3, long motor_4) 
   }
   steps_remaining = max_steps;
 
-  // these need to be reset to adjust for delays
+  // An unknown amount of time has passed since the last step.  To not upset the 
+  // timing, we reset this value, it is set again after the first step.
   this->last_step_time = 0;
-  this->step_delay_correction = 0;
   while (steps_remaining > 0) {
     int next_step[motor_count];
     for (uint8_t motor = 0; motor < motor_count; motor++) {
