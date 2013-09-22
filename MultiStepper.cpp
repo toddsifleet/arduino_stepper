@@ -54,6 +54,18 @@ void MultiStepper::setLimits(
   *ddr = 0;
 }
 
+void MultiStepper::setReverse(
+  bool motor_1,
+  bool motor_2,
+  bool motor_3,
+  bool motor_4) 
+{
+  this->motor_reversed[0] = motor_1;
+  this->motor_reversed[1] = motor_2;
+  this->motor_reversed[2] = motor_3;
+  this->motor_reversed[3] = motor_4;
+}
+
 void MultiStepper::initMotors(
   volatile uint8_t *port,
   volatile uint8_t *ddr,
@@ -72,6 +84,7 @@ void MultiStepper::initMotors(
   for (uint8_t i = 0; i < 4; i++) {
     this->motor_step[i] = 0;
     this->motor_position[i] = 0;
+    this->motor_reversed[i] = false;
   }
 }
 
@@ -96,7 +109,7 @@ void MultiStepper::step(int direction[]) {
       //move backwards
       decrementMotorCounters(motor);
     }
-    port_mask |= STEPS[motor_step[motor] % 4] << motor * 2;
+    port_mask |= STEPS[motor_step[motor]] << motor * 2;
   }
   advanceMotors(port_mask);
 }
@@ -188,14 +201,22 @@ void MultiStepper::setHome() {
   }
 }
 
-void MultiStepper::decrementMotorCounters(int motor) {
+void MultiStepper::decrementMotorCounters(int motor, bool allow_reverse) {
+  if (allow_reverse && this->motor_reversed[motor]) {
+    return incrementMotorCounters(motor, false);
+  }
+
   this->motor_position[motor]--;
   if (! this->motor_step[motor]--) {
     this->motor_step[motor] = 3;
   }
 }
 
-void MultiStepper::incrementMotorCounters(int motor) {
+void MultiStepper::incrementMotorCounters(int motor, bool allow_reverse) {
+  if (allow_reverse && this->motor_reversed[motor]) {
+    return decrementMotorCounters(motor, false);
+  }
+
   this->motor_position[motor]++;
   if (4 == ++this->motor_step[motor]){
     this->motor_step[motor] = 0;

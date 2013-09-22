@@ -31,6 +31,12 @@ class MultiStepper {
       volatile uint8_t *port,
       volatile uint8_t *ddr
     );
+    void setReverse(
+      bool motor_1 = false,
+      bool motor_2 = false,
+      bool motor_3 = false,
+      bool motor_4 = false
+    ); 
     void setStepsPerRevolution(int steps);
     void setSpeed(int rpm);
 
@@ -62,8 +68,8 @@ class MultiStepper {
       int steps_per_revolution
     );
 
-    void incrementMotorCounters(int motor);
-    void decrementMotorCounters(int motor);
+    void incrementMotorCounters(int motor, bool allow_reverse = true);
+    void decrementMotorCounters(int motor, bool allow_reverse = true);
 
     void advanceMotors(volatile uint8_t port_mask);
 
@@ -79,6 +85,7 @@ class MultiStepper {
     uint8_t motor_mask;
     uint8_t motor_count;
     volatile uint8_t *motor_port;
+    bool motor_reversed[4];
 
     //limit config data
     bool has_limit;
