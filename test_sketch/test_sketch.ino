@@ -11,7 +11,7 @@ MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, &PINC, &DDRC, steps_
 
 void setup() {
   stepper_controller.setPrinter(Serial);
-  stepper_controller.setSpeed(60);
+  stepper_controller.setSpeed(6);
   stepper_controller.setReverse(false, true, false);
   Serial.begin(9600);
 }
@@ -54,6 +54,56 @@ void two_steps_forward_one_step_backwards(){
 
 }
 
+long string_to_long(String input) {
+    int len = input.length() + 1;
+    char temp[len];
+    input.toCharArray(temp, len);    
+    return atol(temp);
+}
+void run_command(String input) {
+  if (input.length() <= 0) {
+    return; 
+  }
+
+  long long_values[3];
+  int current = -1;
+  for (int i = 0; i < 3; i++) {
+    //get each segment of the string
+    int n = input.indexOf(' ', ++current);
+    String value = input.substring(current, n);
+    current = n;
+
+    long_values[i] = string_to_long(value);
+  }
+  
+  stepper_controller.move(
+    long_values[0],
+    long_values[1],
+    long_values[2]
+  );
+}
+
+void run_serial_commands() {
+  while (Serial.available() <= 0) {
+    Serial.println("Starting Up...");
+    delay(100);
+  }
+  Serial.read();
+  Serial.println("ready");
+  while (true) {
+    delay(3);
+    if (Serial.available() > 0) {
+      String readString = "";
+      while (Serial.available() > 0) {
+        delay(3);
+        char c = Serial.read();
+        readString += c; 
+      }
+      run_command(readString);
+     }
+   } 
+}
+
 void rectangle(long width, long height){
   stepper_controller.move(width, height);
   stepper_controller.move(-width);
@@ -67,6 +117,7 @@ void rectangle(long width, long height){
 
 void loop() {
 //  rectangle(60000L, 30000L);
-  osscilate(60);
+//  osscilate(60);
+  run_serial_commands();
 }
 
