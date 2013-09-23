@@ -12,7 +12,6 @@ MultiStepper stepper_controller(&PORTA, &DDRA, motor_count, &PINC, &DDRC, steps_
 void setup() {
   stepper_controller.setPrinter(Serial);
   stepper_controller.setSpeed(6);
-  stepper_controller.setReverse(false, true, false);
   Serial.begin(9600);
 }
 
